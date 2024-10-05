@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .login-container, .product-container {
+            max-width: 500px;
+            margin: auto;
+        }
+        .product-form {
+            margin-top: 20px;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Tela de Login -->
+    <div class="login-container" id="login-container">
+        <h3>Login</h3>
+        <form id="login-form">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Digite seu email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+    </div>
+
+    <!-- Tela de Cadastro de Produtos -->
+    <div class="product-container" id="product-container" style="display: none;">
+        <h3>Cadastro de Produtos</h3>
+        <form id="product-form" class="product-form">
+            <div class="mb-3">
+                <label for="codigo" class="form-label">Código</label>
+                <input type="text" class="form-control" id="codigo" required>
+            </div>
+            <div class="mb-3">
+                <label for="marca" class="form-label">Marca</label>
+                <input type="text" class="form-control" id="marca" required>
+            </div>
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <input type="text" class="form-control" id="tipo" required>
+            </div>
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Categoria</label>
+                <input type="text" class="form-control" id="categoria" required>
+            </div>
+            <div class="mb-3">
+                <label for="preco_unitario" class="form-label">Preço Unitário</label>
+                <input type="number" class="form-control" id="preco_unitario" required>
+            </div>
+            <div class="mb-3">
+                <label for="custo" class="form-label">Custo</label>
+                <input type="number" class="form-control" id="custo" required>
+            </div>
+            <div class="mb-3">
+                <label for="obs" class="form-label">Observações</label>
+                <textarea class="form-control" id="obs"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="cadastrarProduto()">Cadastrar</button>
+            <button type="reset" class="btn btn-secondary">Limpar</button>
+            <button type="button" class="btn btn-danger" onclick="limparProdutos()">Limpar Produtos</button> <!-- Botão para limpar os produtos cadastrados -->
+        </form>
+
+        <!-- Tabela de Produtos -->
+        <div class="table-container">
+            <h4>Produtos Cadastrados</h4>
+            <table class="table table-striped" id="product-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Marca</th>
+                        <th>Tipo</th>
+                        <th>Categoria</th>
+                        <th>Preço Unitário</th>
+                        <th>Custo</th>
+                        <th>Obs</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list">
+                    <!-- Produtos cadastrados aparecerão aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de Login Simples
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Impede o envio do formulário
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('product-container').style.display = 'block';
+            } else {
+                alert('Por favor, preencha os campos de login.');
+            }
+        });
+
+        // Lógica para cadastro de produtos
+        let produtos = [];
+
+        function cadastrarProduto() {
+            const codigo = document.getElementById('codigo').value;
+            const marca = document.getElementById('marca').value;
+            const tipo = document.getElementById('tipo').value;
+            const categoria = document.getElementById('categoria').value;
+            const preco_unitario = document.getElementById('preco_unitario').value;
+            const custo = document.getElementById('custo').value;
+            const obs = document.getElementById('obs').value;
+
+            if (codigo && marca && tipo && categoria && preco_unitario && custo) {
+                const produto = { codigo, marca, tipo, categoria, preco_unitario, custo, obs };
+                produtos.push(produto);
+                atualizarTabela();
+                document.getElementById('product-form').reset();
+            } else {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+            }
+        }
+
+        // Função para atualizar a tabela de produtos
+        function atualizarTabela() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';  // Limpa a tabela
+
+            produtos.forEach(produto => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${produto.codigo}</td>
+                    <td>${produto.marca}</td>
+                    <td>${produto.tipo}</td>
+                    <td>${produto.categoria}</td>
+                    <td>${produto.preco_unitario}</td>
+                    <td>${produto.custo}</td>
+                    <td>${produto.obs}</td>
+                `;
+                productList.appendChild(row);
+            });
+        }
+
+        // Função para limpar todos os produtos cadastrados
+        function limparProdutos() {
+            produtos = [];  // Esvazia a lista de produtos
+            atualizarTabela();  // Atualiza a tabela para remover todos os itens
+        }
+    </script>
+
+</body>
+</html>
